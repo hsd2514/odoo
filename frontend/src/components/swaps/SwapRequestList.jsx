@@ -12,11 +12,16 @@ export default function SwapRequestList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+
+  // Fetch both incoming and outgoing swap requests
   function fetchRequests() {
     setLoading(true);
-    axios.get("/swaps/requests")
-      .then(res => {
-        setRequests(res.data);
+    Promise.all([
+      axios.get("/swaps/incoming"),
+      axios.get("/swaps/outgoing")
+    ])
+      .then(([incoming, outgoing]) => {
+        setRequests([...incoming.data, ...outgoing.data]);
         setLoading(false);
       })
       .catch(() => {
@@ -30,11 +35,11 @@ export default function SwapRequestList() {
   }, []);
 
   function handleAccept(id) {
-    axios.post(`/swaps/requests/${id}/accept`)
+    axios.put(`/swaps/${id}`, { status: "accepted" })
       .then(fetchRequests);
   }
   function handleReject(id) {
-    axios.post(`/swaps/requests/${id}/reject`)
+    axios.put(`/swaps/${id}`, { status: "rejected" })
       .then(fetchRequests);
   }
 
