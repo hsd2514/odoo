@@ -17,7 +17,7 @@ class SwapResponse(BaseModel):
     receiver_id: int
     offered_skill: str
     wanted_skill: str
-    status: str  # pending, accepted, rejected, completed
+    status: str  # pending, accepted, rejected, completedW
     message: Optional[str] = None
 
 # In-memory store for demo
