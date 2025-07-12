@@ -14,6 +14,7 @@ import SwapRequestList from "./components/swaps/SwapRequestList";
 import SwapRequestForm from "./components/swaps/SwapRequestForm";
 import SwapRequestCard from "./components/swaps/SwapRequestCard";
 import Navbar from "./components/shared/Navbar";
+import InviteList from "./components/invites/InviteList";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 
 
@@ -42,6 +43,7 @@ function AppRoutes() {
         <Route path="/swaps" element={<SwapRequestList />} />
         {/* Optionally, add a route for SwapRequestForm if you want a separate page */}
         {/* <Route path="/swaps/new" element={<SwapRequestForm />} /> */}
+        <Route path="/invites" element={<InviteList />} />
       </Routes>
     </BrowserRouter>
   );

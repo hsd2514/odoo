@@ -7,6 +7,8 @@ class UserBase(BaseModel):
     location: Optional[str]
     availability: Optional[str]
     is_public: Optional[bool] = True
+    skills_offered: Optional[List[str]] = []
+    skills_wanted: Optional[List[str]] = []
 
 
 class UserCreate(UserBase):
@@ -23,8 +25,13 @@ class UserUpdate(BaseModel):
     availability: Optional[str]
     is_public: Optional[bool]
     photo_url: Optional[str]
+    skills_offered: Optional[List[str]] = []
+    skills_wanted: Optional[List[str]] = []
 
 class UserResponse(UserBase):
     id: int
+    rating: Optional[float] = None
+    skills_offered: Optional[List[str]] = []
+    skills_wanted: Optional[List[str]] = []
     class Config:
         orm_mode = True

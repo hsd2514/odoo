@@ -9,6 +9,7 @@ from app.models.swap import Swap
 from app.models.user import User
 from app.models.skill import Skill
 from app.schemas.swap import SwapCreate, SwapUpdate, SwapResponse, SwapDetailResponse
+from fastapi import Body
 from app.utils.jwt import get_current_user_jwt
 
 router = APIRouter(prefix="/swaps", tags=["Swaps"])
@@ -31,7 +32,8 @@ def create_swap(
         skill_offered=swap.skill_offered,
         skill_requested=swap.skill_requested,
         scheduled_time=swap.scheduled_time,
-        status="pending"
+        status="pending",
+        message=getattr(swap, "message", None)
     )
     db.add(db_swap)
     db.commit()
@@ -58,8 +60,21 @@ def enrich_swap(swap, db):
         'status': swap.status,
         'scheduled_time': swap.scheduled_time,
         'created_at': swap.created_at,
-        'message': getattr(swap, 'message', None)
+        'message': getattr(swap, 'message', None),
+        'rating': swap.rating,
+        'feedback': swap.feedback
     }
+# POST /swaps/{swap_id}/feedback – Submit feedback/rating for a swap
+@router.post("/{swap_id}/feedback", response_model=SwapResponse)
+def submit_swap_feedback(swap_id: int, rating: int = Body(...), feedback: str = Body(""), db: Session = Depends(get_db), current_user: int = Depends(get_current_user)):
+    swap = db.query(Swap).filter(Swap.id == swap_id).first()
+    if not swap:
+        raise HTTPException(status_code=404, detail="Swap not found")
+    swap.rating = rating
+    swap.feedback = feedback
+    db.commit()
+    db.refresh(swap)
+    return enrich_swap(swap, db)
 
 # GET /swaps/incoming – List incoming swap requests
 @router.get("/incoming", response_model=List[SwapDetailResponse])

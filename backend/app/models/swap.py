@@ -16,3 +16,6 @@ class Swap(Base):
     status = Column(String, default="pending")
     scheduled_time = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
+    message = Column(String, nullable=True)
+    rating = Column(Integer, nullable=True)
+    feedback = Column(String, nullable=True)

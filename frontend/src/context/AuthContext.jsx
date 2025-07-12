@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 
 const AuthContext = createContext();
+export { AuthContext };
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -12,7 +13,7 @@ export function AuthProvider({ children }) {
     const token = localStorage.getItem("token");
     if (token) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      axios.get("/users/me")
+      axios.get("http://localhost:8000/users/me")
         .then(res => setUser(res.data))
         .catch(() => setUser(null))
         .finally(() => setLoading(false));
@@ -23,10 +24,10 @@ export function AuthProvider({ children }) {
 
   // Login: store token, fetch user
   async function login(email, password) {
-    const res = await axios.post("/auth/login", { email, password });
+    const res = await axios.post("http://localhost:8000/auth/login", { email, password });
     localStorage.setItem("token", res.data.access_token);
     axios.defaults.headers.common["Authorization"] = `Bearer ${res.data.access_token}`;
-    const userRes = await axios.get("/users/me");
+    const userRes = await axios.get("http://localhost:8000/users/me");
     setUser(userRes.data);
   }
 
@@ -39,7 +40,7 @@ export function AuthProvider({ children }) {
 
   // Register: create user, then login
   async function register(data) {
-    await axios.post("/auth/register", data);
+    await axios.post("http://localhost:8000/auth/register", data);
     await login(data.email, data.password);
   }
 

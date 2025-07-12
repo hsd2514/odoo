@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from "react";
 import ProfileCard from "./ProfileCard";
+import { useAuth } from "../../context/AuthContext";
 import SearchBar from "./SearchBar";
 import Pagination from "./Pagination";
 import CategoryLocationFilter from "./CategoryLocationFilter";
 import SwapRequestModal from "../swaps/SwapRequestModal";
+import InviteRequestModal from "../invites/InviteRequestModal";
 
 /**
- * ProfileList - Displays paginated public profiles with search and filter
+ * ProfileList - Modern DaisyUI/Tailwind public profile list with filters, pagination, and modals
  */
-
 const ProfileList = () => {
+  const { user: currentUser } = useAuth();
   const [profiles, setProfiles] = useState([]);
   const [swapModalOpen, setSwapModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [inviteModalOpen, setInviteModalOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [availability, setAvailability] = useState("");
   const [category, setCategory] = useState("");
@@ -27,7 +30,6 @@ const ProfileList = () => {
   const [filterError, setFilterError] = useState("");
   const pageSize = 10;
 
-  // Set DaisyUI theme to light by default
   useEffect(() => {
     document.querySelector("html").setAttribute("data-theme", "light");
   }, []);
@@ -56,7 +58,6 @@ const ProfileList = () => {
     }
   };
 
-  // Fetch categories and locations for filters
   useEffect(() => {
     setFilterLoading(true);
     setFilterError("");
@@ -111,14 +112,20 @@ const ProfileList = () => {
           ) : (
             <div className="flex flex-col gap-4">
               {profiles.map(user => (
-                <ProfileCard key={user.id} user={user} onRequestSwap={() => { setSelectedUser(user); setSwapModalOpen(true); }} />
+                <ProfileCard
+                  key={user.id}
+                  user={user}
+                  currentUser={currentUser}
+                  onRequestSwap={() => { setSelectedUser(user); setSwapModalOpen(true); }}
+                  onRequestInvite={() => { setSelectedUser(user); setInviteModalOpen(true); }}
+                />
               ))}
             </div>
           )}
         </div>
         <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
       </div>
-      {/* Modal overlay for better iOS/mobile experience */}
+      {/* Modal overlays for better iOS/mobile experience */}
       <div className={swapModalOpen ? "fixed inset-0 z-40 bg-black bg-opacity-40 flex items-center justify-center" : "hidden"}>
         <SwapRequestModal
           open={swapModalOpen}
@@ -127,8 +134,16 @@ const ProfileList = () => {
           onSuccess={() => { setSwapModalOpen(false); }}
         />
       </div>
+      <div className={inviteModalOpen ? "fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center" : "hidden"}>
+        <InviteRequestModal
+          open={inviteModalOpen}
+          onClose={() => setInviteModalOpen(false)}
+          receiver={selectedUser}
+          onSuccess={() => { setInviteModalOpen(false); }}
+        />
+      </div>
     </div>
   );
-};
+}
 
 export default ProfileList;

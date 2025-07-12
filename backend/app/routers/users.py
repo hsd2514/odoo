@@ -41,7 +41,19 @@ def list_public_profiles(
     if availability:
         query = query.filter(User.availability == availability)
     profiles = query.offset((page - 1) * page_size).limit(page_size).all()
-    return profiles
+
+    # Calculate average rating for each user from invites and swaps where user is receiver
+    from app.models.invite import Invite
+    from app.models.swap import Swap
+    result = []
+    for user in profiles:
+        # Get all ratings where user is receiver
+        invite_ratings = db.query(Invite.rating).filter(Invite.receiver_id == user.id, Invite.rating != None).all()
+        swap_ratings = db.query(Swap.rating).filter(Swap.receiver_id == user.id, Swap.rating != None).all()
+        ratings = [r[0] for r in invite_ratings + swap_ratings if r[0] is not None]
+        user.rating = round(sum(ratings) / len(ratings), 2) if ratings else None
+        result.append(user)
+    return result
 
 
 

@@ -1,3 +1,5 @@
+from app.schemas.skill import SkillCreate, SkillResponse, UserSkillCreate, UserSkillResponse
+from fastapi import Query
 
 # routers/skills.py
 # FastAPI routes for skills
@@ -12,6 +14,22 @@ from app.schemas.skill import SkillCreate, SkillResponse, UserSkillCreate, UserS
 from app.utils.auth import get_current_user
 
 router = APIRouter()
+
+
+# GET /skills/trending - List top trending skills
+@router.get("/skills/trending", response_model=List[SkillResponse])
+async def get_trending_skills(
+    db: Session = Depends(get_db),
+    limit: int = Query(5, description="Number of trending skills to return")
+):
+    """Get top trending skills based on offer_count + request_count."""
+    trending = (
+        db.query(Skill)
+        .order_by((Skill.offer_count + Skill.request_count).desc())
+        .limit(limit)
+        .all()
+    )
+    return trending
 
 
 # GET /skills/categories - List all unique skill categories

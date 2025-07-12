@@ -26,6 +26,7 @@ class SwapCreate(BaseModel):
     skill_offered: int
     skill_requested: int
     scheduled_time: Optional[datetime]
+    message: Optional[str] = None
 
 class SwapUpdate(BaseModel):
     status: str  # pending, accepted, rejected, completed
@@ -39,6 +40,7 @@ class SwapResponse(BaseModel):
     status: str
     scheduled_time: Optional[datetime]
     created_at: datetime
+    message: Optional[str] = None
 
     class Config:
         orm_mode = True
