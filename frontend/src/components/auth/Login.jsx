@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 /**
  * Login component - DaisyUI card, email/password fields, login button, forgot password link
  * Matches Screen 2 of the mockup
  */
 const Login = ({ onLogin }) => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -23,6 +25,7 @@ const Login = ({ onLogin }) => {
       const data = await res.json();
       localStorage.setItem("token", data.access_token);
       if (onLogin) onLogin(data);
+      navigate("/profiles");
     } catch (err) {
       setError(err.message);
     }
