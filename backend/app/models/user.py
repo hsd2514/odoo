@@ -2,9 +2,8 @@
 # models/user.py
 # SQLAlchemy model for User
 from sqlalchemy import Column, Integer, String, Boolean
-from sqlalchemy.orm import declarative_base
 
-Base = declarative_base()
+from app.models import Base
 
 class User(Base):
     __tablename__ = "users"

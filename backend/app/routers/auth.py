@@ -14,6 +14,12 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
 
+
+# Explicit OPTIONS handler for CORS preflight
+@router.options("/auth/register")
+def options_register():
+    return {}
+
 # POST /auth/register – Register
 @router.post("/auth/register", response_model=UserResponse)
 def register(user: UserCreate, db: Session = Depends(get_db)):
@@ -32,6 +38,12 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+
+# Explicit OPTIONS handler for CORS preflight
+@router.options("/auth/login")
+def options_login():
+    return {}
 
 # POST /auth/login – Login (returns dummy token for hackathon)
 @router.post("/auth/login")

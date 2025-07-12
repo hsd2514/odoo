@@ -8,10 +8,24 @@ const Login = ({ onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Example: Call backend API here
-    if (onLogin) onLogin({ email, password });
+    setError("");
+    try {
+      const res = await fetch("http://localhost:8000/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      if (!res.ok) throw new Error("Invalid credentials");
+      const data = await res.json();
+      localStorage.setItem("token", data.access_token);
+      if (onLogin) onLogin(data);
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
@@ -36,6 +50,7 @@ const Login = ({ onLogin }) => {
             required
           />
           <button type="submit" className="btn btn-primary w-full">Login</button>
+          {error && <div className="text-error text-sm mt-2">{error}</div>}
         </form>
         <div className="mt-2 text-center">
           <a href="#" className="link link-hover text-sm">Forgot username/password?</a>

@@ -2,10 +2,9 @@
 # models/swap.py
 # SQLAlchemy model for Swap
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
-from sqlalchemy.orm import declarative_base
 from datetime import datetime
 
-Base = declarative_base()
+from app.models import Base
 
 class Swap(Base):
     __tablename__ = "swaps"

@@ -2,9 +2,8 @@
 # models/badge.py
 # SQLAlchemy model for Badge
 from sqlalchemy import Column, Integer, String, ForeignKey
-from sqlalchemy.orm import declarative_base
 
-Base = declarative_base()
+from app.models import Base
 
 class Badge(Base):
     __tablename__ = "badges"

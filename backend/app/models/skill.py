@@ -2,10 +2,9 @@
 # models/skill.py
 # SQLAlchemy models for skills and related entities
 from sqlalchemy import Column, Integer, String, ForeignKey, Enum, Table
-from sqlalchemy.orm import relationship, declarative_base
+from sqlalchemy.orm import relationship
 import enum
-
-Base = declarative_base()
+from app.models import Base
 
 # Enum for skill level
 class SkillLevel(str, enum.Enum):
