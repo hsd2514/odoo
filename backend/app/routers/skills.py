@@ -74,8 +74,7 @@ async def remove_user_skill(
     db.delete(user_skill)
     db.commit()
     return {"message": "Skill removed from user"}
-    # ...existing code...
-    
+   
     query = db.query(UserSkill).filter(
         UserSkill.skill_id.in_(skill_ids),
         UserSkill.user_id != current_user.id,  # Exclude self

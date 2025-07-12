@@ -8,7 +8,13 @@ class UserBase(BaseModel):
     availability: Optional[str]
     is_public: Optional[bool] = True
 
+
 class UserCreate(UserBase):
+    password: str
+
+# Login schema for /auth/login
+class UserLogin(BaseModel):
+    email: EmailStr
     password: str
 
 class UserUpdate(BaseModel):

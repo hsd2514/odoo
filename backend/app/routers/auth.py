@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.user import User
-from app.schemas.user import UserCreate, UserResponse
+from app.schemas.user import UserCreate, UserResponse, UserLogin
 from passlib.context import CryptContext
 
 router = APIRouter()
@@ -45,9 +45,10 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
 def options_login():
     return {}
 
+
 # POST /auth/login – Login (returns dummy token for hackathon)
 @router.post("/auth/login")
-def login(user: UserCreate, db: Session = Depends(get_db)):
+def login(user: UserLogin, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.email == user.email).first()
     if not db_user or not pwd_context.verify(user.password, db_user.password_hash):
         raise HTTPException(status_code=401, detail="Invalid credentials")
