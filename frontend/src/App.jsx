@@ -1,8 +1,10 @@
 
 
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AuthTabs from "./components/auth/AuthTabs";
 import ProfileList from "./components/profiles/ProfileList";
+import UserProfile from "./components/profile/UserProfile";
 
 function App() {
   return (
@@ -14,6 +16,7 @@ function App() {
           </main>
         } />
         <Route path="/profiles" element={<ProfileList />} />
+        <Route path="/profile" element={<UserProfile />} />
       </Routes>
     </BrowserRouter>
   );
