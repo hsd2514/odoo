@@ -1,60 +1,55 @@
 
+
 from fastapi import APIRouter, Depends, HTTPException
-from typing import List, Optional
-from pydantic import BaseModel
+from sqlalchemy.orm import Session
+from typing import List
+from app.database import get_db
+from app.models.swap import Swap
+from app.schemas.swap import SwapCreate, SwapUpdate, SwapResponse
 
 router = APIRouter(prefix="/swaps", tags=["Swaps"])
 
-# Example Pydantic models
-class SwapRequest(BaseModel):
-    offered_skill: str
-    wanted_skill: str
-    message: Optional[str] = None
+# Dummy dependency for current user (replace with real auth in production)
+def get_current_user():
+    return 1  # user id 1 for demo
 
-class SwapResponse(BaseModel):
-    id: int
-    sender_id: int
-    receiver_id: int
-    offered_skill: str
-    wanted_skill: str
-    status: str  # pending, accepted, rejected, completedW
-    message: Optional[str] = None
-
-# In-memory store for demo
-swaps_db = []
-
+# POST /swaps – Create a swap request
 @router.post("/", response_model=SwapResponse)
-async def send_swap_request(request: SwapRequest):
-    """Send a new swap request."""
-    swap = SwapResponse(
-        id=len(swaps_db) + 1,
-        sender_id=1,  # Example, replace with auth
-        receiver_id=2,  # Example, replace with actual user
-        offered_skill=request.offered_skill,
-        wanted_skill=request.wanted_skill,
-        status="pending",
-        message=request.message,
+def create_swap(
+    swap: SwapCreate,
+    db: Session = Depends(get_db),
+    current_user: int = Depends(get_current_user)
+):
+    db_swap = Swap(
+        sender_id=current_user,
+        receiver_id=swap.receiver_id,
+        skill_offered=swap.skill_offered,
+        skill_requested=swap.skill_requested,
+        scheduled_time=swap.scheduled_time,
+        status="pending"
     )
-    swaps_db.append(swap)
-    return swap
+    db.add(db_swap)
+    db.commit()
+    db.refresh(db_swap)
+    return db_swap
 
+# GET /swaps/incoming – List incoming swap requests
 @router.get("/incoming", response_model=List[SwapResponse])
-async def get_incoming_swaps():
-    """Get received swap requests."""
-    # Example: filter by receiver_id
-    return [s for s in swaps_db if s.receiver_id == 1]
+def get_incoming_swaps(db: Session = Depends(get_db), current_user: int = Depends(get_current_user)):
+    return db.query(Swap).filter(Swap.receiver_id == current_user).all()
 
+# GET /swaps/outgoing – List outgoing swap requests
 @router.get("/outgoing", response_model=List[SwapResponse])
-async def get_outgoing_swaps():
-    """Get sent swap requests."""
-    # Example: filter by sender_id
-    return [s for s in swaps_db if s.sender_id == 1]
+def get_outgoing_swaps(db: Session = Depends(get_db), current_user: int = Depends(get_current_user)):
+    return db.query(Swap).filter(Swap.sender_id == current_user).all()
 
+# PUT /swaps/{swap_id} – Update swap status
 @router.put("/{swap_id}", response_model=SwapResponse)
-async def update_swap_status(swap_id: int, status: str):
-    """Accept, reject, or complete a swap request."""
-    for swap in swaps_db:
-        if swap.id == swap_id:
-            swap.status = status
-            return swap
-    raise HTTPException(status_code=404, detail="Swap not found")
+def update_swap_status(swap_id: int, update: SwapUpdate, db: Session = Depends(get_db), current_user: int = Depends(get_current_user)):
+    swap = db.query(Swap).filter(Swap.id == swap_id).first()
+    if not swap:
+        raise HTTPException(status_code=404, detail="Swap not found")
+    swap.status = update.status
+    db.commit()
+    db.refresh(swap)
+    return swap
