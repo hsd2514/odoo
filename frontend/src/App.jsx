@@ -1,16 +1,25 @@
+import { useState } from 'react';
+import Login from './components/Login';
+import SignUp from './components/SignUp';
 
 function App() {
+  const [currentPage, setCurrentPage] = useState('login');
+
+  const navigateToSignUp = () => {
+    setCurrentPage('signup');
+  };
+
+  const navigateToLogin = () => {
+    setCurrentPage('login');
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-base-200">
-      <div className="card w-96 bg-base-100 shadow-xl">
-        <div className="card-body items-center text-center">
-          <h2 className="card-title">Welcome to DaisyUI + React!</h2>
-          <p>This is a base component styled with DaisyUI and Tailwind CSS.</p>
-          <div className="card-actions justify-end">
-            <button className="btn btn-primary">Get Started</button>
-          </div>
-        </div>
-      </div>
+    <div className="App">
+      {currentPage === 'login' ? (
+        <Login onNavigateToSignUp={navigateToSignUp} />
+      ) : (
+        <SignUp onNavigateToLogin={navigateToLogin} />
+      )}
     </div>
   );
 }
