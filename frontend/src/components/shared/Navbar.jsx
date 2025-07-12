@@ -9,12 +9,28 @@ import { Link, useNavigate } from "react-router-dom";
  */
 export default function Navbar({ user, onLogout }) {
   const navigate = useNavigate();
+  // Theme toggle handler (button)
+  const [theme, setTheme] = React.useState(() =>
+    document.querySelector("html").getAttribute("data-theme") || "light"
+  );
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    document.querySelector("html").setAttribute("data-theme", newTheme);
+  };
   return (
     <div className="navbar bg-base-100 shadow mb-4">
       <div className="flex-1">
         <Link to="/" className="btn btn-ghost normal-case text-xl">Skill Swap Platform</Link>
       </div>
-      <div className="flex-none gap-2">
+      <div className="flex-none gap-2 items-center">
+        <button
+          className="btn btn-sm btn-outline"
+          onClick={toggleTheme}
+          aria-label="Toggle theme"
+        >
+          {theme === "light" ? "🌞 Light" : "🌙 Dark"}
+        </button>
         <Link to="/profiles" className="btn btn-ghost">Home</Link>
         <Link to="/swaps" className="btn btn-ghost">Swap Requests</Link>
         {user ? (

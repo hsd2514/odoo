@@ -14,23 +14,16 @@ import SwapRequestList from "./components/swaps/SwapRequestList";
 import SwapRequestForm from "./components/swaps/SwapRequestForm";
 import SwapRequestCard from "./components/swaps/SwapRequestCard";
 import Navbar from "./components/shared/Navbar";
-import { useState } from "react";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 
 
 
-function App() {
-  // Dummy user state for demo; replace with real auth logic
-  const [user, setUser] = useState({ name: "Demo User", photo_url: "" });
-  function handleLogout() {
-    setUser(null);
-    // Add real logout logic here
-  }
 
-  // Example: pass ProfileCard, SearchBar, Pagination to ProfileList for modularity
-  // (Assumes ProfileList is set up to accept these as props; if not, update ProfileList accordingly)
+function AppRoutes() {
+  const { user, logout } = useAuth();
   return (
     <BrowserRouter>
-      <Navbar user={user} onLogout={handleLogout} />
+      <Navbar user={user} onLogout={logout} />
       <Routes>
         {/* Auth Module */}
         <Route path="/" element={
@@ -54,4 +47,12 @@ function App() {
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppRoutes />
+    </AuthProvider>
+  );
+}
+
+
