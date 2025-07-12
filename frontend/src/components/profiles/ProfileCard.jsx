@@ -4,7 +4,8 @@ import React from "react";
  * ProfileCard - DaisyUI card for displaying a public user profile
  * Props: user (object with name, photo_url, skills, rating, etc.), onRequest (function)
  */
-const ProfileCard = ({ user, onRequest }) => (
+
+const ProfileCard = ({ user, onRequestSwap }) => (
   <div className="card bg-base-100 shadow-md mb-4">
     <div className="card-body flex flex-row items-center gap-4">
       <img
@@ -27,8 +28,8 @@ const ProfileCard = ({ user, onRequest }) => (
         </div>
         <div className="mt-2 text-xs">Rating: {user.rating ?? "-"}</div>
       </div>
-      <button className="btn btn-primary" onClick={() => onRequest(user)}>
-        Request
+      <button className="btn btn-primary" onClick={() => onRequestSwap(user)}>
+        Request Swap
       </button>
     </div>
   </div>

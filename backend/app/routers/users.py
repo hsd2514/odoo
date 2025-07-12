@@ -3,9 +3,11 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from typing import List
+
 from app.database import get_db
 from app.models.user import User
 from app.schemas.user import UserUpdate, UserResponse
+from app.utils.jwt import get_current_user_jwt
 
 # Set a prefix for all user-related endpoints
 router = APIRouter(prefix="/users", tags=["users"])
@@ -43,13 +45,9 @@ def list_public_profiles(
 
 
 
-# Dummy dependency for current user (replace with real auth in production)
-def get_current_user(db: Session = Depends(get_db)):
-    # For hackathon, just return the first user
-    user = db.query(User).first()
-    if not user:
-        raise HTTPException(status_code=401, detail="Not authenticated")
-    return user
+
+# Real dependency for current user using JWT
+get_current_user = get_current_user_jwt
 
 
 # GET /users/me – My profile

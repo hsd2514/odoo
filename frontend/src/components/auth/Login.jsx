@@ -1,33 +1,26 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 /**
  * Login component - DaisyUI card, email/password fields, login button, forgot password link
  * Matches Screen 2 of the mockup
  */
-const Login = ({ onLogin }) => {
+const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     try {
-      const res = await fetch("http://localhost:8000/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-      if (!res.ok) throw new Error("Invalid credentials");
-      const data = await res.json();
-      localStorage.setItem("token", data.access_token);
-      if (onLogin) onLogin(data);
+      await login(email, password);
       navigate("/profiles");
     } catch (err) {
-      setError(err.message);
+      setError("Invalid credentials");
     }
   };
 

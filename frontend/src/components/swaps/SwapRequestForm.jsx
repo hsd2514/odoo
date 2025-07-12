@@ -4,7 +4,7 @@ import axios from "axios";
 /**
  * SwapRequestForm.jsx
  * DaisyUI + Tailwind form to request a swap: offered skill, wanted skill, message, submit.
- * For beginners: This form lets you request a skill swap from another user.
+ * For beginners: This form lets you request a skill swap from another user (manual entry, not linked to profiles).
  */
 export default function SwapRequestForm({ onSuccess }) {
   const [form, setForm] = useState({ offered_skill: "", wanted_skill: "", message: "" });

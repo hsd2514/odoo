@@ -22,9 +22,11 @@ BadgeBase.metadata.create_all(bind=engine)
 InviteBase.metadata.create_all(bind=engine)
 
 # Dependency for FastAPI to get a DB session
-from typing import Generator
 
-def get_db() -> Generator:
+from typing import Generator
+from sqlalchemy.orm import Session
+
+def get_db() -> Generator[Session, None, None]:
     """
     Yields a SQLAlchemy database session and ensures it is closed after use.
     Example usage in FastAPI:
