@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ProfileCard from "./ProfileCard";
+import TrendingSkillsWidget from "../widgets/TrendingSkillsWidget";
 import { useAuth } from "../../context/AuthContext";
 import SearchBar from "./SearchBar";
 import Pagination from "./Pagination";
@@ -98,6 +99,10 @@ const ProfileList = () => {
             setAvailability={setAvailability}
             onSearch={() => { setPage(1); fetchProfiles(); }}
           />
+        </div>
+        {/* Trending Skills Widget */}
+        <div className="mb-4">
+          <TrendingSkillsWidget limit={3} />
         </div>
         <div className="mb-4">
           <h2 className="text-lg font-semibold mb-2 text-center">Public Profiles</h2>

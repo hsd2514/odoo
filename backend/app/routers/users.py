@@ -28,6 +28,9 @@ def list_public_profiles(
     db: Session = Depends(get_db),
     search: str = Query(None, description="Search by name/email"),
     availability: str = Query(None, description="Filter by availability"),
+    location: str = Query(None, description="Filter by location"),
+    skill: str = Query(None, description="Filter by skill name (offered or wanted)"),
+    category: str = Query(None, description="Filter by skill category (offered or wanted)"),
     page: int = Query(1, ge=1, description="Page number"),
     page_size: int = Query(10, ge=1, le=50, description="Page size"),
 ):
@@ -40,6 +43,29 @@ def list_public_profiles(
         query = query.filter((User.name.ilike(f"%{search}%")) | (User.email.ilike(f"%{search}%")))
     if availability:
         query = query.filter(User.availability == availability)
+    if location:
+        query = query.filter(User.location == location)
+    if skill:
+        # skills_offered and skills_wanted are arrays of strings (JSONB)
+        query = query.filter(
+            (User.skills_offered != None) & (User.skills_offered.contains([skill])) |
+            (User.skills_wanted != None) & (User.skills_wanted.contains([skill]))
+        )
+    if category:
+        from app.models.skill import Skill
+        from sqlalchemy import or_
+        # Get all skill names in this category
+        skill_names = [s.name for s in db.query(Skill).filter(Skill.category == category).all()]
+        if skill_names:
+            # For JSONB, use .contains([name]) for each skill name, combine with or_
+            query = query.filter(
+                (User.skills_offered != None) & (
+                    or_(*[User.skills_offered.contains([name]) for name in skill_names])
+                ) |
+                (User.skills_wanted != None) & (
+                    or_(*[User.skills_wanted.contains([name]) for name in skill_names])
+                )
+            )
     profiles = query.offset((page - 1) * page_size).limit(page_size).all()
 
     # Calculate average rating for each user from invites and swaps where user is receiver

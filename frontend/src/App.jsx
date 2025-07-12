@@ -18,6 +18,9 @@ import InviteList from "./components/invites/InviteList";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 
 
+import PublicUserProfile from "./components/profile/PublicUserProfile";
+
+
 
 
 function AppRoutes() {
@@ -38,6 +41,7 @@ function AppRoutes() {
 
         {/* Profile Module */}
         <Route path="/profile" element={<UserProfile />} />
+        <Route path="/profile/:id" element={<PublicUserProfile />} />
 
         {/* Swap Request Module */}
         <Route path="/swaps" element={<SwapRequestList />} />

@@ -38,10 +38,12 @@ def hash_pw(pw):
 
 def main():
     db = SessionLocal()
-    # Add skills
+    # Add skills (avoid duplicates)
     for name, category in SKILLS:
-        skill = Skill(name=name, category=category)
-        db.merge(skill)
+        existing = db.query(Skill).filter_by(name=name).first()
+        if not existing:
+            skill = Skill(name=name, category=category)
+            db.add(skill)
     db.commit()
     skills = db.query(Skill).all()
     # Add users
@@ -65,16 +67,21 @@ def main():
         except IntegrityError:
             db.rollback()
     users = db.query(User).all()
-    # Assign random skills to users
+    # Assign random skills to users and populate JSONB fields
     for user in users:
         offered = random.sample(skills, k=2)
         wanted = random.sample(skills, k=2)
+        # Assign UserSkill rows (legacy/compat)
         for skill in offered:
             us = UserSkill(user_id=user.id, skill_id=skill.id, type="offered", level=random.choice(list(SkillLevel)))
             db.merge(us)
         for skill in wanted:
             us = UserSkill(user_id=user.id, skill_id=skill.id, type="wanted", level=random.choice(list(SkillLevel)))
             db.merge(us)
+        # Also set JSONB fields for frontend
+        user.skills_offered = [skill.name for skill in offered]
+        user.skills_wanted = [skill.name for skill in wanted]
+        db.add(user)
     db.commit()
     print("Seeded 50 users, skills, and user skills. All passwords: test123")
     db.close()
