@@ -3,6 +3,7 @@ import ProfileCard from "./ProfileCard";
 import SearchBar from "./SearchBar";
 import Pagination from "./Pagination";
 import CategoryLocationFilter from "./CategoryLocationFilter";
+import SwapRequestModal from "../swaps/SwapRequestModal";
 
 /**
  * ProfileList - Displays paginated public profiles with search and filter
@@ -10,6 +11,8 @@ import CategoryLocationFilter from "./CategoryLocationFilter";
 
 const ProfileList = () => {
   const [profiles, setProfiles] = useState([]);
+  const [swapModalOpen, setSwapModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [search, setSearch] = useState("");
   const [availability, setAvailability] = useState("");
   const [category, setCategory] = useState("");
@@ -75,36 +78,55 @@ const ProfileList = () => {
   }, [search, availability, category, location, page]);
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
-      <CategoryLocationFilter
-        categories={categories}
-        locations={locations}
-        value={{ category, location }}
-        onChange={v => { setCategory(v.category); setLocation(v.location); setPage(1); }}
-      />
-      {filterLoading && <div className="alert alert-info my-2">Loading filters...</div>}
-      {filterError && <div className="alert alert-error my-2">{filterError}</div>}
-      <SearchBar
-        search={search}
-        setSearch={setSearch}
-        availability={availability}
-        setAvailability={setAvailability}
-        onSearch={() => { setPage(1); fetchProfiles(); }}
-      />
-      {loading ? (
-        <div className="flex justify-center my-8">
-          <span className="loading loading-spinner loading-lg text-primary"></span>
+    <div className="min-h-screen bg-base-200 flex flex-col items-center py-4 px-2 sm:px-0">
+      <div className="w-full max-w-2xl">
+        <div className="card bg-base-100 shadow-xl p-4 mb-4">
+          <h1 className="text-2xl font-bold mb-2 text-center">Find People to Swap Skills</h1>
+          <CategoryLocationFilter
+            categories={categories}
+            locations={locations}
+            value={{ category, location }}
+            onChange={v => { setCategory(v.category); setLocation(v.location); setPage(1); }}
+          />
+          {filterLoading && <div className="alert alert-info my-2">Loading filters...</div>}
+          {filterError && <div className="alert alert-error my-2">{filterError}</div>}
+          <SearchBar
+            search={search}
+            setSearch={setSearch}
+            availability={availability}
+            setAvailability={setAvailability}
+            onSearch={() => { setPage(1); fetchProfiles(); }}
+          />
         </div>
-      ) : error ? (
-        <div className="alert alert-error my-4">{error}</div>
-      ) : profiles.length === 0 ? (
-        <div className="alert alert-warning my-4">No profiles found. Try adjusting your filters.</div>
-      ) : (
-        profiles.map(user => (
-          <ProfileCard key={user.id} user={user} onRequest={() => alert(`Request sent to ${user.name}`)} />
-        ))
-      )}
-      <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+        <div className="mb-4">
+          <h2 className="text-lg font-semibold mb-2 text-center">Public Profiles</h2>
+          {loading ? (
+            <div className="flex justify-center my-8">
+              <span className="loading loading-spinner loading-lg text-primary"></span>
+            </div>
+          ) : error ? (
+            <div className="alert alert-error my-4">{error}</div>
+          ) : profiles.length === 0 ? (
+            <div className="alert alert-warning my-4">No profiles found. Try adjusting your filters.</div>
+          ) : (
+            <div className="flex flex-col gap-4">
+              {profiles.map(user => (
+                <ProfileCard key={user.id} user={user} onRequestSwap={() => { setSelectedUser(user); setSwapModalOpen(true); }} />
+              ))}
+            </div>
+          )}
+        </div>
+        <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+      </div>
+      {/* Modal overlay for better iOS/mobile experience */}
+      <div className={swapModalOpen ? "fixed inset-0 z-40 bg-black bg-opacity-40 flex items-center justify-center" : "hidden"}>
+        <SwapRequestModal
+          open={swapModalOpen}
+          onClose={() => setSwapModalOpen(false)}
+          receiver={selectedUser}
+          onSuccess={() => { setSwapModalOpen(false); }}
+        />
+      </div>
     </div>
   );
 };

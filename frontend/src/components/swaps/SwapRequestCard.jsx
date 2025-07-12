@@ -9,10 +9,10 @@ export default function SwapRequestCard({ request, onAccept, onReject }) {
   return (
     <div className="card bg-base-100 shadow mb-4">
       <div className="card-body">
-        <h3 className="card-title">{request.offered_skill} ⇄ {request.wanted_skill}</h3>
-        <p><b>From:</b> {request.from_user_name}</p>
-        <p><b>To:</b> {request.to_user_name}</p>
-        <p><b>Message:</b> {request.message}</p>
+        <h3 className="card-title">{request.skill_offered_name} ⇄ {request.skill_requested_name}</h3>
+        <p><b>From:</b> {request.sender_name}</p>
+        <p><b>To:</b> {request.receiver_name}</p>
+        <p><b>Message:</b> {request.message || <span className="text-gray-400">(none)</span>}</p>
         <p><b>Status:</b> <span className={`badge badge-${request.status === "pending" ? "info" : request.status === "accepted" ? "success" : "error"}`}>{request.status}</span></p>
         {request.status === "pending" && (
           <div className="card-actions mt-2">
