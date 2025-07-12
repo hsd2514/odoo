@@ -40,12 +40,12 @@ const Login = ({ onNavigateToSignUp }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/10 to-secondary/10 p-4">
+    <div className="min-h-screen bg-base-200 p-4" data-theme="corporate">
       {/* Navigation Header */}
-      <div className="navbar bg-base-100 shadow-lg rounded-box mb-8">
+      <div className="navbar bg-base-100 shadow-lg rounded-box mb-8 border border-base-300">
         <div className="flex-1">
           <a 
-            className="btn btn-ghost text-xl font-bold text-primary hover:text-primary-focus transition-all duration-200"
+            className="btn btn-ghost text-xl font-bold text-base-content hover:text-primary transition-all duration-200"
             onClick={() => {
               // Navigate to home page - you can replace this with your routing logic
               console.log('Navigate to home from title');
@@ -59,7 +59,7 @@ const Login = ({ onNavigateToSignUp }) => {
         </div>
         <div className="flex-none">
           <button 
-            className="btn btn-ghost hover:btn-primary transition-all duration-200"
+            className="btn btn-ghost text-base-content hover:text-primary hover:bg-primary/10 transition-all duration-200"
             onClick={() => {
               // Navigate to home page - you can replace this with your routing logic
               console.log('Navigate to home');
@@ -75,11 +75,11 @@ const Login = ({ onNavigateToSignUp }) => {
 
       {/* Login Card */}
       <div className="flex items-center justify-center">
-        <div className="card w-full max-w-md bg-base-100 shadow-2xl">
+        <div className="card w-full max-w-md bg-base-100 shadow-2xl border border-base-300">
           <div className="card-body">
             {/* Header */}
             <div className="text-center mb-6">
-              <h1 className="text-3xl font-bold text-primary mb-2">Welcome Back!</h1>
+              <h1 className="text-3xl font-bold text-base-content mb-2">Welcome Back!</h1>
               <p className="text-base-content/60">Sign in to your SkillSwap account</p>
             </div>
 
@@ -165,7 +165,7 @@ const Login = ({ onNavigateToSignUp }) => {
               </label>
               <button
                 type="button"
-                className="link link-primary text-sm hover:link-hover"
+                className="link link-primary text-sm hover:link-hover font-medium"
                 onClick={() => document.getElementById('forgot_password_modal').showModal()}
               >
                 Forgot Password?
@@ -176,7 +176,7 @@ const Login = ({ onNavigateToSignUp }) => {
             <button
               type="submit"
               disabled={isLoading}
-              className="btn btn-primary w-full"
+              className="btn btn-primary w-full text-white font-medium"
             >
               {isLoading ? (
                 <>
@@ -194,7 +194,7 @@ const Login = ({ onNavigateToSignUp }) => {
             <p className="text-base-content/60">
               Don't have an account?{' '}
               <button 
-                className="link link-primary hover:link-hover"
+                className="link link-primary hover:link-hover font-medium"
                 onClick={() => onNavigateToSignUp && onNavigateToSignUp()}
               >
                 Sign up here
@@ -207,34 +207,34 @@ const Login = ({ onNavigateToSignUp }) => {
 
       {/* Forgot Password Modal */}
       <dialog id="forgot_password_modal" className="modal">
-        <div className="modal-box bg-white rounded-2xl border border-gray-100 shadow-2xl">
+        <div className="modal-box bg-base-100 rounded-2xl border border-base-300 shadow-2xl">
           <form method="dialog">
-            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 text-slate-400 hover:text-slate-600">✕</button>
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 text-base-content/40 hover:text-base-content/60">✕</button>
           </form>
-          <h3 className="font-bold text-lg mb-4 text-slate-800">Reset Password</h3>
-          <p className="text-slate-500 mb-6">
+          <h3 className="font-bold text-lg mb-4 text-base-content">Reset Password</h3>
+          <p className="text-base-content/60 mb-6">
             Enter your email address and we'll send you a link to reset your password.
           </p>
           <div className="form-control">
             <label className="label">
-              <span className="label-text text-slate-700 font-medium">Email</span>
+              <span className="label-text text-base-content font-medium">Email</span>
             </label>
             <input
               type="email"
               placeholder="Enter your email"
-              className="input input-bordered w-full border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 rounded-lg"
+              className="input input-bordered w-full focus:input-primary"
               required
             />
           </div>
           <div className="modal-action">
             <button 
-              className="btn bg-blue-600 hover:bg-blue-700 text-white border-none rounded-lg"
+              className="btn btn-primary text-white font-medium"
               onClick={handleForgotPassword}
             >
               Send Reset Link
             </button>
             <form method="dialog">
-              <button className="btn btn-ghost text-slate-600 hover:text-slate-800">Cancel</button>
+              <button className="btn btn-ghost text-base-content/60 hover:text-base-content/80">Cancel</button>
             </form>
           </div>
         </div>
@@ -243,7 +243,7 @@ const Login = ({ onNavigateToSignUp }) => {
       {/* Toast Notification */}
       {showToast && (
         <div className="toast toast-top toast-end">
-          <div className="alert bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg shadow-lg">
+          <div className="alert alert-success rounded-lg shadow-lg">
             <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
