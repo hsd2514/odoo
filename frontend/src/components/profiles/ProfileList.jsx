@@ -7,6 +7,7 @@ import CategoryLocationFilter from "./CategoryLocationFilter";
 /**
  * ProfileList - Displays paginated public profiles with search and filter
  */
+
 const ProfileList = () => {
   const [profiles, setProfiles] = useState([]);
   const [search, setSearch] = useState("");
@@ -17,33 +18,55 @@ const ProfileList = () => {
   const [locations, setLocations] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [filterLoading, setFilterLoading] = useState(false);
+  const [filterError, setFilterError] = useState("");
   const pageSize = 10;
 
+  // Set DaisyUI theme to light by default
+  useEffect(() => {
+    document.querySelector("html").setAttribute("data-theme", "light");
+  }, []);
+
   const fetchProfiles = async () => {
-    const params = new URLSearchParams({
-      ...(search && { search }),
-      ...(availability && { availability }),
-      ...(category && { category }),
-      ...(location && { location }),
-      page,
-      page_size: pageSize,
-    });
-    const res = await fetch(`http://localhost:8000/users/public?${params}`);
-    if (res.ok) {
+    setLoading(true);
+    setError("");
+    try {
+      const params = new URLSearchParams({
+        ...(search && { search }),
+        ...(availability && { availability }),
+        ...(category && { category }),
+        ...(location && { location }),
+        page,
+        page_size: pageSize,
+      });
+      const res = await fetch(`http://localhost:8000/users/public?${params}`);
+      if (!res.ok) throw new Error("Failed to fetch profiles");
       const data = await res.json();
       setProfiles(data);
-      setTotalPages(5);
+      setTotalPages(5); // TODO: Replace with real total pages if available
+    } catch (err) {
+      setError(err.message || "Error loading profiles");
+    } finally {
+      setLoading(false);
     }
   };
 
   // Fetch categories and locations for filters
   useEffect(() => {
-    fetch("http://localhost:8000/skills/categories")
-      .then(res => res.json())
-      .then(setCategories);
-    fetch("http://localhost:8000/users/locations")
-      .then(res => res.json())
-      .then(setLocations);
+    setFilterLoading(true);
+    setFilterError("");
+    Promise.all([
+      fetch("http://localhost:8000/skills/categories").then(res => res.json()),
+      fetch("http://localhost:8000/users/locations").then(res => res.json()),
+    ])
+      .then(([cats, locs]) => {
+        setCategories(cats);
+        setLocations(locs);
+      })
+      .catch(() => setFilterError("Failed to load filter options"))
+      .finally(() => setFilterLoading(false));
   }, []);
 
   useEffect(() => {
@@ -59,6 +82,8 @@ const ProfileList = () => {
         value={{ category, location }}
         onChange={v => { setCategory(v.category); setLocation(v.location); setPage(1); }}
       />
+      {filterLoading && <div className="alert alert-info my-2">Loading filters...</div>}
+      {filterError && <div className="alert alert-error my-2">{filterError}</div>}
       <SearchBar
         search={search}
         setSearch={setSearch}
@@ -66,9 +91,19 @@ const ProfileList = () => {
         setAvailability={setAvailability}
         onSearch={() => { setPage(1); fetchProfiles(); }}
       />
-      {profiles.map(user => (
-        <ProfileCard key={user.id} user={user} onRequest={() => alert(`Request sent to ${user.name}`)} />
-      ))}
+      {loading ? (
+        <div className="flex justify-center my-8">
+          <span className="loading loading-spinner loading-lg text-primary"></span>
+        </div>
+      ) : error ? (
+        <div className="alert alert-error my-4">{error}</div>
+      ) : profiles.length === 0 ? (
+        <div className="alert alert-warning my-4">No profiles found. Try adjusting your filters.</div>
+      ) : (
+        profiles.map(user => (
+          <ProfileCard key={user.id} user={user} onRequest={() => alert(`Request sent to ${user.name}`)} />
+        ))
+      )}
       <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
     </div>
   );

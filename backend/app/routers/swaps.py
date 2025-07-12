@@ -3,15 +3,20 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
+
 from app.database import get_db
 from app.models.swap import Swap
-from app.schemas.swap import SwapCreate, SwapUpdate, SwapResponse
+from app.models.user import User
+from app.models.skill import Skill
+from app.schemas.swap import SwapCreate, SwapUpdate, SwapResponse, SwapDetailResponse
+from app.utils.jwt import get_current_user_jwt
 
 router = APIRouter(prefix="/swaps", tags=["Swaps"])
 
-# Dummy dependency for current user (replace with real auth in production)
-def get_current_user():
-    return 1  # user id 1 for demo
+
+# Real dependency for current user using JWT
+def get_current_user(user=Depends(get_current_user_jwt)):
+    return user.id
 
 # POST /swaps – Create a swap request
 @router.post("/", response_model=SwapResponse)
@@ -33,15 +38,40 @@ def create_swap(
     db.refresh(db_swap)
     return db_swap
 
+
+# Helper to enrich swap with user/skill names
+def enrich_swap(swap, db):
+    sender = db.query(User).filter_by(id=swap.sender_id).first()
+    receiver = db.query(User).filter_by(id=swap.receiver_id).first()
+    skill_offered = db.query(Skill).filter_by(id=swap.skill_offered).first()
+    skill_requested = db.query(Skill).filter_by(id=swap.skill_requested).first()
+    return {
+        'id': swap.id,
+        'sender_id': swap.sender_id,
+        'receiver_id': swap.receiver_id,
+        'sender_name': sender.name if sender else str(swap.sender_id),
+        'receiver_name': receiver.name if receiver else str(swap.receiver_id),
+        'skill_offered': swap.skill_offered,
+        'skill_offered_name': skill_offered.name if skill_offered else str(swap.skill_offered),
+        'skill_requested': swap.skill_requested,
+        'skill_requested_name': skill_requested.name if skill_requested else str(swap.skill_requested),
+        'status': swap.status,
+        'scheduled_time': swap.scheduled_time,
+        'created_at': swap.created_at,
+        'message': getattr(swap, 'message', None)
+    }
+
 # GET /swaps/incoming – List incoming swap requests
-@router.get("/incoming", response_model=List[SwapResponse])
+@router.get("/incoming", response_model=List[SwapDetailResponse])
 def get_incoming_swaps(db: Session = Depends(get_db), current_user: int = Depends(get_current_user)):
-    return db.query(Swap).filter(Swap.receiver_id == current_user).all()
+    swaps = db.query(Swap).filter(Swap.receiver_id == current_user).all()
+    return [enrich_swap(s, db) for s in swaps]
 
 # GET /swaps/outgoing – List outgoing swap requests
-@router.get("/outgoing", response_model=List[SwapResponse])
+@router.get("/outgoing", response_model=List[SwapDetailResponse])
 def get_outgoing_swaps(db: Session = Depends(get_db), current_user: int = Depends(get_current_user)):
-    return db.query(Swap).filter(Swap.sender_id == current_user).all()
+    swaps = db.query(Swap).filter(Swap.sender_id == current_user).all()
+    return [enrich_swap(s, db) for s in swaps]
 
 # PUT /swaps/{swap_id} – Update swap status
 @router.put("/{swap_id}", response_model=SwapResponse)
