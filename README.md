@@ -1,6 +1,7 @@
 # Video Demo
 
 [![Watch the video](https://img.youtube.com/vi/SfjpJaB7JDI/maxresdefault.jpg)](https://www.youtube.com/watch?v=SfjpJaB7JDI)
+[link](https://www.youtube.com/watch?v=SfjpJaB7JDI)
 
 
 # Odoo Hackathon Monorepo
