@@ -1,9 +1,7 @@
+
 # routers/skills.py
 # FastAPI routes for skills
 
-
-
-# routers/skills.py
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
@@ -14,6 +12,14 @@ from app.schemas.skill import SkillCreate, SkillResponse, UserSkillCreate, UserS
 from app.utils.auth import get_current_user
 
 router = APIRouter()
+
+
+# GET /skills/categories - List all unique skill categories
+@router.get("/skills/categories", response_model=List[str])
+async def list_skill_categories(db: Session = Depends(get_db)):
+    """Get all unique skill categories."""
+    categories = db.query(Skill.category).distinct().all()
+    return [c[0] for c in categories if c[0]]
 
 # GET /skills/ - List all skills
 @router.get("/skills/", response_model=List[SkillResponse])

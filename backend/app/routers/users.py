@@ -11,6 +11,15 @@ from app.schemas.user import UserUpdate, UserResponse
 router = APIRouter(prefix="/users", tags=["users"])
 
 
+from sqlalchemy import distinct
+
+# GET /users/locations – List all unique user locations
+@router.get("/locations", response_model=List[str])
+def list_user_locations(db: Session = Depends(get_db)):
+    """Get all unique user locations."""
+    locations = db.query(distinct(User.location)).all()
+    return [l[0] for l in locations if l[0]]
+
 # GET /users/public – List public profiles with search, filter, pagination
 @router.get("/public", response_model=List[UserResponse])
 def list_public_profiles(
@@ -32,7 +41,7 @@ def list_public_profiles(
     profiles = query.offset((page - 1) * page_size).limit(page_size).all()
     return profiles
 
-    
+
 
 # Dummy dependency for current user (replace with real auth in production)
 def get_current_user(db: Session = Depends(get_db)):
