@@ -45,12 +45,12 @@ const SignUp = ({ onNavigateToLogin }) => {
   };
 
   return (
-    <div className="min-h-screen bg-base-200 p-4" data-theme="corporate">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 p-4">
       {/* Navigation Header */}
-      <div className="navbar bg-base-100 shadow-lg rounded-xl mb-8 border border-base-300">
-        <div className="flex-1">
+      <div className="navbar bg-white/95 backdrop-blur-sm shadow-lg rounded-xl mb-8 border border-white/20">
+        <div className="navbar-start">
           <a 
-            className="btn btn-ghost text-xl font-bold text-base-content hover:text-primary transition-all duration-200"
+            className="btn btn-ghost text-xl font-bold text-blue-600 hover:text-blue-800 transition-all duration-200"
             onClick={() => {
               console.log('Navigate to home from title');
             }}
@@ -61,9 +61,9 @@ const SignUp = ({ onNavigateToLogin }) => {
             SkillSwap
           </a>
         </div>
-        <div className="flex-none">
+        <div className="navbar-end">
           <button 
-            className="btn btn-ghost text-base-content hover:text-primary hover:bg-primary/10 transition-all duration-200"
+            className="btn btn-ghost hover:bg-blue-50 hover:text-blue-600 transition-all duration-200"
             onClick={() => {
               console.log('Navigate to home');
             }}
@@ -78,12 +78,12 @@ const SignUp = ({ onNavigateToLogin }) => {
 
       {/* Sign Up Card */}
       <div className="flex items-center justify-center">
-        <div className="card w-full max-w-md bg-base-100 shadow-xl rounded-2xl border border-base-300">
+        <div className="card w-full max-w-md bg-white/95 backdrop-blur-sm shadow-xl rounded-2xl border border-white/20">
           <div className="card-body p-8">
             {/* Header */}
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold mb-2 text-base-content">Join SkillSwap!</h1>
-              <p className="text-base-content/70 text-lg">Create your account to get started</p>
+              <h1 className="text-3xl font-bold mb-2 text-blue-600">Join SkillSwap!</h1>
+              <p className="text-gray-600 text-lg">Create your account to get started</p>
             </div>
 
             {/* Form */}
@@ -91,13 +91,13 @@ const SignUp = ({ onNavigateToLogin }) => {
               {/* Email */}
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text font-medium">Email</span>
+                  <span className="label-text font-medium text-gray-700">Email</span>
                 </label>
                 <input
                   type="email"
                   name="email"
                   placeholder="Enter your email"
-                  className="input input-bordered focus:input-primary"
+                  className="input input-bordered focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
                   value={formData.email}
                   onChange={handleInputChange}
                   required
@@ -107,14 +107,14 @@ const SignUp = ({ onNavigateToLogin }) => {
               {/* Password */}
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text font-medium">Password</span>
+                  <span className="label-text font-medium text-gray-700">Password</span>
                 </label>
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
                     name="password"
                     placeholder="Create a password"
-                    className="input input-bordered w-full pr-12 focus:input-primary"
+                    className="input input-bordered w-full pr-12 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
                     value={formData.password}
                     onChange={handleInputChange}
                     required
@@ -122,7 +122,7 @@ const SignUp = ({ onNavigateToLogin }) => {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-base-content/40 hover:text-base-content/60"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   >
                     {showPassword ? (
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -142,7 +142,7 @@ const SignUp = ({ onNavigateToLogin }) => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="btn btn-primary w-full text-white font-medium"
+                className="btn w-full bg-blue-600 hover:bg-blue-700 border-blue-600 hover:border-blue-700 text-white"
               >
                 {isLoading ? (
                   <>
@@ -157,10 +157,10 @@ const SignUp = ({ onNavigateToLogin }) => {
 
             {/* Login Link */}
             <div className="text-center mt-6">
-              <p className="text-base-content/60">
+              <p className="text-gray-600">
                 Already have an account?{' '}
                 <button 
-                  className="link link-primary hover:link-hover font-medium"
+                  className="link text-blue-600 hover:text-blue-800"
                   onClick={() => onNavigateToLogin && onNavigateToLogin()}
                 >
                   Sign in here

@@ -14,7 +14,7 @@ function App() {
   };
 
   return (
-    <div className="App" data-theme="corporate">
+    <div className="App">
       {currentPage === 'login' ? (
         <Login onNavigateToSignUp={navigateToSignUp} />
       ) : (

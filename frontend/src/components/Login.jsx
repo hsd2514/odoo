@@ -40,12 +40,12 @@ const Login = ({ onNavigateToSignUp }) => {
   };
 
   return (
-    <div className="min-h-screen bg-base-200 p-4" data-theme="corporate">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 p-4">
       {/* Navigation Header */}
-      <div className="navbar bg-base-100 shadow-lg rounded-box mb-8 border border-base-300">
-        <div className="flex-1">
+      <div className="navbar bg-white/95 backdrop-blur-sm shadow-lg rounded-box mb-8 border border-white/20">
+        <div className="navbar-start">
           <a 
-            className="btn btn-ghost text-xl font-bold text-base-content hover:text-primary transition-all duration-200"
+            className="btn btn-ghost text-xl font-bold text-blue-600 hover:text-blue-800 transition-all duration-200"
             onClick={() => {
               // Navigate to home page - you can replace this with your routing logic
               console.log('Navigate to home from title');
@@ -57,9 +57,9 @@ const Login = ({ onNavigateToSignUp }) => {
             SkillSwap
           </a>
         </div>
-        <div className="flex-none">
+        <div className="navbar-end">
           <button 
-            className="btn btn-ghost text-base-content hover:text-primary hover:bg-primary/10 transition-all duration-200"
+            className="btn btn-ghost hover:bg-blue-50 hover:text-blue-600 transition-all duration-200"
             onClick={() => {
               // Navigate to home page - you can replace this with your routing logic
               console.log('Navigate to home');
@@ -75,12 +75,12 @@ const Login = ({ onNavigateToSignUp }) => {
 
       {/* Login Card */}
       <div className="flex items-center justify-center">
-        <div className="card w-full max-w-md bg-base-100 shadow-2xl border border-base-300">
+        <div className="card w-full max-w-md bg-white/95 backdrop-blur-sm shadow-2xl border border-white/20">
           <div className="card-body">
             {/* Header */}
             <div className="text-center mb-6">
-              <h1 className="text-3xl font-bold text-base-content mb-2">Welcome Back!</h1>
-              <p className="text-base-content/60">Sign in to your SkillSwap account</p>
+              <h1 className="text-3xl font-bold text-blue-600 mb-2">Welcome Back!</h1>
+              <p className="text-gray-600">Sign in to your SkillSwap account</p>
             </div>
 
           {/* Login Form */}
@@ -88,14 +88,14 @@ const Login = ({ onNavigateToSignUp }) => {
             {/* Email Field */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-medium">Email</span>
+                <span className="label-text font-medium text-gray-700">Email</span>
               </label>
               <div className="relative">
                 <input
                   type="email"
                   name="email"
                   placeholder="Enter your email"
-                  className="input input-bordered w-full pl-12 focus:input-primary"
+                  className="input input-bordered w-full pl-12 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
                   value={formData.email}
                   onChange={handleInputChange}
                   required
@@ -106,7 +106,7 @@ const Login = ({ onNavigateToSignUp }) => {
                   viewBox="0 0 24 24" 
                   strokeWidth={1.5} 
                   stroke="currentColor" 
-                  className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-base-content/40"
+                  className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
                 </svg>
@@ -116,14 +116,14 @@ const Login = ({ onNavigateToSignUp }) => {
             {/* Password Field */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-medium">Password</span>
+                <span className="label-text font-medium text-gray-700">Password</span>
               </label>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
                   name="password"
                   placeholder="Enter your password"
-                  className="input input-bordered w-full pl-12 pr-12 focus:input-primary"
+                  className="input input-bordered w-full pl-12 pr-12 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
                   value={formData.password}
                   onChange={handleInputChange}
                   required
@@ -134,14 +134,14 @@ const Login = ({ onNavigateToSignUp }) => {
                   viewBox="0 0 24 24" 
                   strokeWidth={1.5} 
                   stroke="currentColor" 
-                  className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-base-content/40"
+                  className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                 </svg>
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-base-content/40 hover:text-base-content/60"
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
                   {showPassword ? (
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -160,12 +160,12 @@ const Login = ({ onNavigateToSignUp }) => {
             {/* Remember Me & Forgot Password */}
             <div className="flex items-center justify-between">
               <label className="label cursor-pointer">
-                <input type="checkbox" className="checkbox checkbox-primary checkbox-sm" />
-                <span className="label-text ml-2">Remember me</span>
+                <input type="checkbox" className="checkbox checkbox-sm border-blue-500 [--chkbg:theme(colors.blue.600)] [--chkfg:white]" />
+                <span className="label-text ml-2 text-gray-700">Remember me</span>
               </label>
               <button
                 type="button"
-                className="link link-primary text-sm hover:link-hover font-medium"
+                className="link text-blue-600 hover:text-blue-800 text-sm"
                 onClick={() => document.getElementById('forgot_password_modal').showModal()}
               >
                 Forgot Password?
@@ -176,7 +176,7 @@ const Login = ({ onNavigateToSignUp }) => {
             <button
               type="submit"
               disabled={isLoading}
-              className="btn btn-primary w-full text-white font-medium"
+              className="btn w-full bg-blue-600 hover:bg-blue-700 border-blue-600 hover:border-blue-700 text-white"
             >
               {isLoading ? (
                 <>
@@ -191,10 +191,10 @@ const Login = ({ onNavigateToSignUp }) => {
 
           {/* Sign Up Link */}
           <div className="text-center mt-6">
-            <p className="text-base-content/60">
+            <p className="text-gray-600">
               Don't have an account?{' '}
               <button 
-                className="link link-primary hover:link-hover font-medium"
+                className="link text-blue-600 hover:text-blue-800"
                 onClick={() => onNavigateToSignUp && onNavigateToSignUp()}
               >
                 Sign up here
@@ -207,34 +207,34 @@ const Login = ({ onNavigateToSignUp }) => {
 
       {/* Forgot Password Modal */}
       <dialog id="forgot_password_modal" className="modal">
-        <div className="modal-box bg-base-100 rounded-2xl border border-base-300 shadow-2xl">
+        <div className="modal-box bg-white/95 backdrop-blur-sm rounded-2xl border border-white/20 shadow-2xl">
           <form method="dialog">
-            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 text-base-content/40 hover:text-base-content/60">✕</button>
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 text-gray-400 hover:text-gray-600">✕</button>
           </form>
-          <h3 className="font-bold text-lg mb-4 text-base-content">Reset Password</h3>
-          <p className="text-base-content/60 mb-6">
+          <h3 className="font-bold text-lg mb-4 text-gray-800">Reset Password</h3>
+          <p className="text-gray-600 mb-6">
             Enter your email address and we'll send you a link to reset your password.
           </p>
           <div className="form-control">
             <label className="label">
-              <span className="label-text text-base-content font-medium">Email</span>
+              <span className="label-text text-gray-700 font-medium">Email</span>
             </label>
             <input
               type="email"
               placeholder="Enter your email"
-              className="input input-bordered w-full focus:input-primary"
+              className="input input-bordered w-full focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
               required
             />
           </div>
           <div className="modal-action">
             <button 
-              className="btn btn-primary text-white font-medium"
+              className="btn bg-blue-600 hover:bg-blue-700 border-blue-600 hover:border-blue-700 text-white font-medium"
               onClick={handleForgotPassword}
             >
               Send Reset Link
             </button>
             <form method="dialog">
-              <button className="btn btn-ghost text-base-content/60 hover:text-base-content/80">Cancel</button>
+              <button className="btn btn-ghost text-gray-600 hover:text-gray-800">Cancel</button>
             </form>
           </div>
         </div>
@@ -243,7 +243,7 @@ const Login = ({ onNavigateToSignUp }) => {
       {/* Toast Notification */}
       {showToast && (
         <div className="toast toast-top toast-end">
-          <div className="alert alert-success rounded-lg shadow-lg">
+          <div className="alert bg-green-100 border-green-200 text-green-800 rounded-lg shadow-lg">
             <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
